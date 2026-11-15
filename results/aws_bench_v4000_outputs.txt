@@ -1,0 +1,234 @@
+=== job 1
+Parallel Dijkstra (all-pairs shortest paths) on PARCS-Python
+vertices      : 4000
+edges         : ~20000 (avg degree 10, weights 1..100, seed 42)
+workers       : 1 (available 4)
+time, s       : 59.343
+
+reachable pairs : 15996000
+sum of distances: 1480895782
+avg distance    : 92.5791
+diameter        : 235 (from vertex 1138)
+radius          : 138 (center vertex 296)
+checksum        : 6042161152728016
+
+per worker (part: sources, gen s, compute s):
+  0: 4000, 0.044, 59.293
+
+RESULT_JSON {"checksum": 6042161152728016, "degree": 10, "diameter": 235, "max_compute": 59.2927, "radius": 138, "seed": 42, "time": 59.3425, "vertices": 4000, "workers": 1}
+=== job 2
+Parallel Dijkstra (all-pairs shortest paths) on PARCS-Python
+vertices      : 4000
+edges         : ~20000 (avg degree 10, weights 1..100, seed 42)
+workers       : 1 (available 4)
+time, s       : 58.544
+
+reachable pairs : 15996000
+sum of distances: 1480895782
+avg distance    : 92.5791
+diameter        : 235 (from vertex 1138)
+radius          : 138 (center vertex 296)
+checksum        : 6042161152728016
+
+per worker (part: sources, gen s, compute s):
+  0: 4000, 0.056, 58.482
+
+RESULT_JSON {"checksum": 6042161152728016, "degree": 10, "diameter": 235, "max_compute": 58.4823, "radius": 138, "seed": 42, "time": 58.5444, "vertices": 4000, "workers": 1}
+=== job 3
+Parallel Dijkstra (all-pairs shortest paths) on PARCS-Python
+vertices      : 4000
+edges         : ~20000 (avg degree 10, weights 1..100, seed 42)
+workers       : 1 (available 4)
+time, s       : 57.558
+
+reachable pairs : 15996000
+sum of distances: 1480895782
+avg distance    : 92.5791
+diameter        : 235 (from vertex 1138)
+radius          : 138 (center vertex 296)
+checksum        : 6042161152728016
+
+per worker (part: sources, gen s, compute s):
+  0: 4000, 0.057, 57.495
+
+RESULT_JSON {"checksum": 6042161152728016, "degree": 10, "diameter": 235, "max_compute": 57.4947, "radius": 138, "seed": 42, "time": 57.5579, "vertices": 4000, "workers": 1}
+=== job 4
+Parallel Dijkstra (all-pairs shortest paths) on PARCS-Python
+vertices      : 4000
+edges         : ~20000 (avg degree 10, weights 1..100, seed 42)
+workers       : 2 (available 4)
+time, s       : 30.060
+
+reachable pairs : 15996000
+sum of distances: 1480895782
+avg distance    : 92.5791
+diameter        : 235 (from vertex 1138)
+radius          : 138 (center vertex 296)
+checksum        : 6042161152728016
+
+per worker (part: sources, gen s, compute s):
+  0: 2000, 0.043, 28.565
+  1: 2000, 0.044, 30.011
+
+RESULT_JSON {"checksum": 6042161152728016, "degree": 10, "diameter": 235, "max_compute": 30.0106, "radius": 138, "seed": 42, "time": 30.0596, "vertices": 4000, "workers": 2}
+=== job 5
+Parallel Dijkstra (all-pairs shortest paths) on PARCS-Python
+vertices      : 4000
+edges         : ~20000 (avg degree 10, weights 1..100, seed 42)
+workers       : 2 (available 4)
+time, s       : 31.898
+
+reachable pairs : 15996000
+sum of distances: 1480895782
+avg distance    : 92.5791
+diameter        : 235 (from vertex 1138)
+radius          : 138 (center vertex 296)
+checksum        : 6042161152728016
+
+per worker (part: sources, gen s, compute s):
+  0: 2000, 0.043, 28.811
+  1: 2000, 0.059, 31.831
+
+RESULT_JSON {"checksum": 6042161152728016, "degree": 10, "diameter": 235, "max_compute": 31.8311, "radius": 138, "seed": 42, "time": 31.8984, "vertices": 4000, "workers": 2}
+=== job 6
+Parallel Dijkstra (all-pairs shortest paths) on PARCS-Python
+vertices      : 4000
+edges         : ~20000 (avg degree 10, weights 1..100, seed 42)
+workers       : 2 (available 4)
+time, s       : 31.012
+
+reachable pairs : 15996000
+sum of distances: 1480895782
+avg distance    : 92.5791
+diameter        : 235 (from vertex 1138)
+radius          : 138 (center vertex 296)
+checksum        : 6042161152728016
+
+per worker (part: sources, gen s, compute s):
+  0: 2000, 0.057, 28.513
+  1: 2000, 0.043, 30.959
+
+RESULT_JSON {"checksum": 6042161152728016, "degree": 10, "diameter": 235, "max_compute": 30.9593, "radius": 138, "seed": 42, "time": 31.0117, "vertices": 4000, "workers": 2}
+=== job 7
+Parallel Dijkstra (all-pairs shortest paths) on PARCS-Python
+vertices      : 4000
+edges         : ~20000 (avg degree 10, weights 1..100, seed 42)
+workers       : 3 (available 4)
+time, s       : 21.317
+
+reachable pairs : 15996000
+sum of distances: 1480895782
+avg distance    : 92.5791
+diameter        : 235 (from vertex 1138)
+radius          : 138 (center vertex 296)
+checksum        : 6042161152728016
+
+per worker (part: sources, gen s, compute s):
+  0: 1334, 0.045, 19.526
+  1: 1333, 0.057, 20.358
+  2: 1333, 0.044, 21.263
+
+RESULT_JSON {"checksum": 6042161152728016, "degree": 10, "diameter": 235, "max_compute": 21.2632, "radius": 138, "seed": 42, "time": 21.3173, "vertices": 4000, "workers": 3}
+=== job 8
+Parallel Dijkstra (all-pairs shortest paths) on PARCS-Python
+vertices      : 4000
+edges         : ~20000 (avg degree 10, weights 1..100, seed 42)
+workers       : 3 (available 4)
+time, s       : 20.149
+
+reachable pairs : 15996000
+sum of distances: 1480895782
+avg distance    : 92.5791
+diameter        : 235 (from vertex 1138)
+radius          : 138 (center vertex 296)
+checksum        : 6042161152728016
+
+per worker (part: sources, gen s, compute s):
+  0: 1334, 0.056, 19.234
+  1: 1333, 0.043, 20.097
+  2: 1333, 0.057, 19.846
+
+RESULT_JSON {"checksum": 6042161152728016, "degree": 10, "diameter": 235, "max_compute": 20.0967, "radius": 138, "seed": 42, "time": 20.1486, "vertices": 4000, "workers": 3}
+=== job 9
+Parallel Dijkstra (all-pairs shortest paths) on PARCS-Python
+vertices      : 4000
+edges         : ~20000 (avg degree 10, weights 1..100, seed 42)
+workers       : 3 (available 4)
+time, s       : 20.708
+
+reachable pairs : 15996000
+sum of distances: 1480895782
+avg distance    : 92.5791
+diameter        : 235 (from vertex 1138)
+radius          : 138 (center vertex 296)
+checksum        : 6042161152728016
+
+per worker (part: sources, gen s, compute s):
+  0: 1334, 0.044, 19.072
+  1: 1333, 0.057, 20.641
+  2: 1333, 0.043, 19.882
+
+RESULT_JSON {"checksum": 6042161152728016, "degree": 10, "diameter": 235, "max_compute": 20.6413, "radius": 138, "seed": 42, "time": 20.7085, "vertices": 4000, "workers": 3}
+=== job 10
+Parallel Dijkstra (all-pairs shortest paths) on PARCS-Python
+vertices      : 4000
+edges         : ~20000 (avg degree 10, weights 1..100, seed 42)
+workers       : 4 (available 4)
+time, s       : 18.369
+
+reachable pairs : 15996000
+sum of distances: 1480895782
+avg distance    : 92.5791
+diameter        : 235 (from vertex 1138)
+radius          : 138 (center vertex 296)
+checksum        : 6042161152728016
+
+per worker (part: sources, gen s, compute s):
+  0: 1000, 0.058, 14.488
+  1: 1000, 0.043, 15.351
+  2: 1000, 0.061, 18.297
+  3: 1000, 0.043, 12.756
+
+RESULT_JSON {"checksum": 6042161152728016, "degree": 10, "diameter": 235, "max_compute": 18.2968, "radius": 138, "seed": 42, "time": 18.3693, "vertices": 4000, "workers": 4}
+=== job 11
+Parallel Dijkstra (all-pairs shortest paths) on PARCS-Python
+vertices      : 4000
+edges         : ~20000 (avg degree 10, weights 1..100, seed 42)
+workers       : 4 (available 4)
+time, s       : 16.729
+
+reachable pairs : 15996000
+sum of distances: 1480895782
+avg distance    : 92.5791
+diameter        : 235 (from vertex 1138)
+radius          : 138 (center vertex 296)
+checksum        : 6042161152728016
+
+per worker (part: sources, gen s, compute s):
+  0: 1000, 0.045, 14.281
+  1: 1000, 0.057, 15.088
+  2: 1000, 0.049, 16.669
+  3: 1000, 0.054, 12.258
+
+RESULT_JSON {"checksum": 6042161152728016, "degree": 10, "diameter": 235, "max_compute": 16.6689, "radius": 138, "seed": 42, "time": 16.7295, "vertices": 4000, "workers": 4}
+=== job 12
+Parallel Dijkstra (all-pairs shortest paths) on PARCS-Python
+vertices      : 4000
+edges         : ~20000 (avg degree 10, weights 1..100, seed 42)
+workers       : 4 (available 4)
+time, s       : 16.176
+
+reachable pairs : 15996000
+sum of distances: 1480895782
+avg distance    : 92.5791
+diameter        : 235 (from vertex 1138)
+radius          : 138 (center vertex 296)
+checksum        : 6042161152728016
+
+per worker (part: sources, gen s, compute s):
+  0: 1000, 0.060, 14.547
+  1: 1000, 0.043, 15.556
+  2: 1000, 0.059, 16.094
+  3: 1000, 0.042, 12.329
+
+RESULT_JSON {"checksum": 6042161152728016, "degree": 10, "diameter": 235, "max_compute": 16.0942, "radius": 138, "seed": 42, "time": 16.1765, "vertices": 4000, "workers": 4}

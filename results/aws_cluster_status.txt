@@ -1,0 +1,12 @@
+----------------------------------------------------------------------------------------------------
+|                                         DescribeInstances                                        |
++---------------------+-----------------+----------------+----------------+-----------+------------+
+|         Id          |      Name       |   PrivateIP    |   PublicIP     |   State   |   Type     |
++---------------------+-----------------+----------------+----------------+-----------+------------+
+|  i-0d3e730e96548252e|  parcs-master   |  172.31.34.107 |  16.192.61.44  |  running  |  t3.micro  |
+|  i-03244b277c214f062|  parcs-worker-2 |  172.31.40.253 |  13.51.200.180 |  running  |  t3.micro  |
+|  i-0d35ea4d83ce1a73f|  parcs-worker-3 |  172.31.32.200 |  51.20.65.210  |  running  |  t3.micro  |
+|  i-0e6b492c4801adf92|  parcs-worker-4 |  172.31.47.114 |  13.51.146.71  |  running  |  t3.micro  |
++---------------------+-----------------+----------------+----------------+-----------+------------+
+{"workers":[{"enabled":true,"id":0,"info":{"cpu":"Intel(R) Xeon(R) Platinum 8259CL CPU @ 2.50GHz (2 cores)","ram":"0.9 GB"},"ip":"172.31.34.107","port":8081},{"enabled":true,"id":1,"info":{"cpu":"Intel(R) Xeon(R) Platinum 8259CL CPU @ 2.50GHz (2 cores)","ram":"0.9 GB"},"ip":"172.31.40.253","port":8080},{"enabled":true,"id":2,"info":{"cpu":"Intel(R) Xeon(R) Platinum 8259CL CPU @ 2.50GHz (2 cores)","ram":"0.9 GB"},"ip":"172.31.32.200","port":8080},{"enabled":true,"id":3,"info":{"cpu":"Intel(R) Xeon(R) Platinum 8259CL CPU @ 2.50GHz (2 cores)","ram":"0.9 GB"},"ip":"172.31.47.114","port":8080}]}
+
