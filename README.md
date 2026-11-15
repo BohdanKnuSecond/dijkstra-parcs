@@ -1,4 +1,4 @@
-# Паралельний алгоритм Дейкстри на PARCS-Python у Google Cloud
+# Паралельний алгоритм Дейкстри на PARCS-Python в AWS
 
 Лабораторна робота №1 з курсу «Хмарні обчислення», варіант 1.2:
 **алгоритм Дейкстри для знаходження найкоротших шляхів**.
@@ -33,7 +33,7 @@
 | `sequential.py` | послідовна версія (еталон) |
 | `tests/` | тести: Дейкстра проти Флойда-Воршелла, незалежність результату від `N` |
 | `parcs/` | PARCS-Python, портований на Python 3 (див. нижче) |
-| `cloud/` | скрипти розгортання в Google Cloud |
+| `cloud/` | скрипти розгортання в AWS EC2 |
 | `tools/run_job.py` | клієнт: запуск задач і серій замірів через HTTP API master'а |
 | `tools/local_cluster.py` | локальний кластер (master + N воркерів як процеси) для налагодження |
 
@@ -48,7 +48,7 @@
 | `async = Pyro4.async(proxy)` — синтаксична помилка в Python ≥ 3.7, а `Pyro4.async` прибрано з Pyro4 4.7x | `proxy._pyroAsync()` |
 | модуль `imp` і `Logger.warn` видалено в Python 3.12/3.13 | `importlib.util`, `log.warning` |
 | Dockerfile на `debian:stretch` (EOL, репозиторії apt недоступні), `python-pip` для Python 2 | Docker не використовується: Debian 12 + venv + systemd |
-| `gcloud compute instances create-with-container` застарів | звичайні VM + startup-script |
+| інструкція з `gcloud compute instances create-with-container` (Docker-образ 2019 р.) застаріла | звичайні VM з Debian 12 + user-data (див. нижче) |
 | `get_ip()` шукав лише адреси `192.*` через `netifaces` (у GCP `10.*`; немає wheel для нових Python) | IP через `socket` |
 | `py-cpuinfo`: ключ `brand` → `brand_raw` | виправлено, додано реальний обсяг RAM |
 | поле `RPCThread.daemon` перекривало `Thread.daemon` | перейменовано на `pyro_daemon` |
@@ -68,24 +68,27 @@ python sequential.py solution/input_2000.txt
 .venv/Scripts/python tools/run_job.py bench solution/input_2000.txt -n 1 2 3 4 -r 2
 ```
 
-## Розгортання в Google Cloud
+## Розгортання в AWS EC2
 
-Потрібні: акаунт GCP з білінгом (free trial підходить), встановлений
-[Google Cloud CLI](https://cloud.google.com/sdk/docs/install) або Cloud Shell.
-
-```bash
-gcloud auth login
-gcloud projects create <PROJECT_ID>              # або візьміть існуючий
-gcloud config set project <PROJECT_ID>
-gcloud billing projects link <PROJECT_ID> --billing-account=<BILLING_ID>   # gcloud billing accounts list
-```
-
-У `cloud/config.sh` вкажіть `REPO_URL` (публічний форк цього репозиторію), за потреби зону й тип VM.
+Потрібні: акаунт AWS (новий акаунт на Free plan підходить), [AWS CLI v2](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+і bash (Linux/macOS, Git Bash на Windows або AWS CloudShell).
 
 ```bash
-bash cloud/create_cluster.sh     # firewall + parcs-master + parcs-worker-1..4
-bash cloud/cluster.sh status     # VM і зареєстровані воркери (через 1-2 хв після створення)
+aws login                        # вхід через браузер, ключі доступу не потрібні
+aws configure set region eu-central-1
 ```
+
+У `cloud/config.sh` за потреби змініть `REPO_URL` (публічний форк цього репозиторію), регіон і тип VM.
+Кожна нода — окрема VM з Debian 12; user-data клонує репозиторій, ставить залежності у venv
+і запускає PARCS як systemd-сервіс. Воркери отримують приватну IP master'а при створенні.
+
+```bash
+bash cloud/create_cluster.sh     # security group + parcs-master + parcs-worker-1..4
+bash cloud/cluster.sh status     # VM і зареєстровані воркери (через 2-3 хв після створення)
+```
+
+Якщо `run-instances` повертає `VcpuLimitExceeded`, у нового акаунта квота 5 vCPU: використайте
+1-vCPU тип — `INSTANCE_TYPE=t2.micro bash cloud/create_cluster.sh`.
 
 Веб-інтерфейс: `http://<MASTER_IP>:8080/workers`. Задачу можна додати через UI (Add Job:
 `solution/dijkstra_solution.py` + `solution/input_4000.txt`) або з консолі:

@@ -1,47 +1,59 @@
 #!/bin/bash
-# Створює правила firewall, master і WORKERS воркерів.
+# Створює security group, parcs-master і parcs-worker-1..WORKERS в AWS EC2.
 #   bash cloud/create_cluster.sh
 set -euo pipefail
 cd "$(dirname "$0")"
 source ./config.sh
 
-[ -n "$PROJECT_ID" ] || { echo "PROJECT_ID не задано"; exit 1; }
-case "$REPO_URL" in *CHANGE_ME*) echo "Вкажіть REPO_URL у cloud/config.sh"; exit 1;; esac
+echo "Account: $(awsq sts get-caller-identity --query Account --output text), region $REGION"
 
-gcloud config set project "$PROJECT_ID"
-gcloud services enable compute.googleapis.com
+VPC="$(awsq ec2 describe-vpcs --filters Name=isDefault,Values=true --query 'Vpcs[0].VpcId' --output text)"
+[ "$VPC" != "None" ] || { echo "Немає default VPC: aws ec2 create-default-vpc"; exit 1; }
 
-# Ноди спілкуються між собою (Flask 8080 + випадкові порти Pyro4) лише всередині VPC
-gcloud compute firewall-rules describe parcs-internal >/dev/null 2>&1 || \
-  gcloud compute firewall-rules create parcs-internal --network=default \
-    --direction=INGRESS --action=ALLOW --rules=tcp,udp,icmp \
-    --source-tags=parcs --target-tags=parcs
-
-# Веб-інтерфейс master'а відкриваємо лише для власної IP-адреси
-MY_IP="$(curl -fs https://api.ipify.org)"
-if gcloud compute firewall-rules describe parcs-ui >/dev/null 2>&1; then
-  gcloud compute firewall-rules update parcs-ui --source-ranges="$MY_IP/32"
-else
-  gcloud compute firewall-rules create parcs-ui --network=default \
-    --direction=INGRESS --action=ALLOW --rules=tcp:8080 \
-    --source-ranges="$MY_IP/32" --target-tags=parcs-master
+# Security group: ноди бачать одна одну повністю (Flask 8080 + випадкові порти Pyro4),
+# а веб-інтерфейс master'а доступний лише з вашої IP-адреси
+SG="$(awsq ec2 describe-security-groups --filters Name=group-name,Values="$SG_NAME" Name=vpc-id,Values="$VPC" \
+      --query 'SecurityGroups[0].GroupId' --output text)"
+if [ "$SG" = "None" ]; then
+  SG="$(awsq ec2 create-security-group --group-name "$SG_NAME" --description "PARCS cluster" \
+        --vpc-id "$VPC" --query GroupId --output text)"
+  aws ec2 authorize-security-group-ingress --group-id "$SG" \
+    --ip-permissions "IpProtocol=-1,UserIdGroupPairs=[{GroupId=$SG}]" >/dev/null
 fi
+MY_IP="$(curl -fs https://checkip.amazonaws.com | tr -d '\r\n')"
+aws ec2 authorize-security-group-ingress --group-id "$SG" --protocol tcp --port 8080 \
+  --cidr "$MY_IP/32" >/dev/null 2>&1 || true
+echo "Security group $SG, UI доступний з $MY_IP"
 
-COMMON=(--zone="$ZONE" --machine-type="$MACHINE_TYPE"
-        --image-family="$IMAGE_FAMILY" --image-project="$IMAGE_PROJECT"
-        --boot-disk-size=10GB --metadata-from-file=startup-script=startup.sh)
-META="parcs-repo=$REPO_URL,parcs-branch=$REPO_BRANCH,parcs-master=$MASTER_NAME"
+mkdir -p .build
+make_userdata() {  # $1 = role, $2 = master private ip
+  { echo '#!/bin/bash'
+    echo "ROLE=$1"; echo "MASTER=$2"; echo "REPO=$REPO_URL"; echo "BRANCH=$REPO_BRANCH"
+    tail -n +2 node_setup.sh
+  } > ".build/userdata_$1.sh"
+}
 
-gcloud compute instances create "$MASTER_NAME" "${COMMON[@]}" \
-  --tags=parcs,parcs-master --metadata="parcs-role=master,$META"
+launch() {  # $1 = name, $2 = role
+  awsq ec2 run-instances --image-id "$AMI" --instance-type "$INSTANCE_TYPE" \
+    --security-group-ids "$SG" --user-data "file://.build/userdata_$2.sh" \
+    --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=$1},{Key=Project,Value=$PROJECT_TAG},{Key=Role,Value=$2}]" \
+    --query 'Instances[0].InstanceId' --output text
+}
 
-WORKER_NAMES=()
-for i in $(seq 1 "$WORKERS"); do WORKER_NAMES+=("$WORKER_PREFIX-$i"); done
-gcloud compute instances create "${WORKER_NAMES[@]}" "${COMMON[@]}" \
-  --tags=parcs --metadata="parcs-role=worker,$META"
+make_userdata master ""
+MASTER_ID="$(launch parcs-master master)"
+MASTER_IP="$(awsq ec2 describe-instances --instance-ids "$MASTER_ID" \
+             --query 'Reservations[0].Instances[0].PrivateIpAddress' --output text)"
+echo "parcs-master: $MASTER_ID ($MASTER_IP)"
 
-gcloud compute instances list --filter="tags.items=parcs"
-MASTER_IP="$(gcloud compute instances describe "$MASTER_NAME" --zone="$ZONE" \
-  --format='get(networkInterfaces[0].accessConfigs[0].natIP)')"
-echo
-echo "Master UI (через 1-2 хв, поки VM встановлять пакети): http://$MASTER_IP:8080/workers"
+make_userdata worker "$MASTER_IP"
+IDS=("$MASTER_ID")
+for i in $(seq 1 "$WORKERS"); do
+  ID="$(launch "parcs-worker-$i" worker)"
+  echo "parcs-worker-$i: $ID"
+  IDS+=("$ID")
+done
+
+aws ec2 wait instance-running --instance-ids "${IDS[@]}"
+bash ./cluster.sh status
+echo "Через 2-3 хв (поки VM ставлять пакети) відкрийте: http://$(bash ./cluster.sh ip):8080/workers"
