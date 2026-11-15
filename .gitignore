@@ -4,3 +4,4 @@ __pycache__/
 results/local_logs/
 report/build/
 cloud/.build/
+CLAUDE.local.md
