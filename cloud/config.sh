@@ -1,7 +1,9 @@
 # Налаштування кластера PARCS в AWS EC2. Змініть під себе.
-REGION="${REGION:-eu-central-1}"              # Франкфурт
-INSTANCE_TYPE="${INSTANCE_TYPE:-t3.micro}"    # free-tier; при квоті 5 vCPU — t2.micro (1 vCPU)
-WORKERS="${WORKERS:-4}"
+REGION="${REGION:-eu-north-1}"                # Стокгольм (Free plan: лише регіон акаунта)
+INSTANCE_TYPE="${INSTANCE_TYPE:-t3.micro}"    # free-tier eligible
+WORKERS="${WORKERS:-4}"                      # кількість воркер-процесів PARCS
+# 1 = worker-1 запускається на VM master'а (квота Free plan 8 vCPU = 4 VM по 2 vCPU)
+COLOCATED_WORKER="${COLOCATED_WORKER:-1}"
 # Офіційний образ Debian 12 (id береться з публічного параметра SSM)
 AMI="${AMI:-resolve:ssm:/aws/service/debian/release/12/latest/amd64}"
 

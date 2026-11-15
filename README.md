@@ -74,8 +74,8 @@ python sequential.py solution/input_2000.txt
 і bash (Linux/macOS, Git Bash на Windows або AWS CloudShell).
 
 ```bash
-aws login                        # вхід через браузер, ключі доступу не потрібні
-aws configure set region eu-central-1
+aws login --region eu-north-1    # вхід через браузер, ключі доступу не потрібні
+aws configure set region eu-north-1   # Free plan працює лише в регіоні, обраному при реєстрації
 ```
 
 У `cloud/config.sh` за потреби змініть `REPO_URL` (публічний форк цього репозиторію), регіон і тип VM.
@@ -87,8 +87,11 @@ bash cloud/create_cluster.sh     # security group + parcs-master + parcs-worker-
 bash cloud/cluster.sh status     # VM і зареєстровані воркери (через 2-3 хв після створення)
 ```
 
-Якщо `run-instances` повертає `VcpuLimitExceeded`, у нового акаунта квота 5 vCPU: використайте
-1-vCPU тип — `INSTANCE_TYPE=t2.micro bash cloud/create_cluster.sh`.
+Новий акаунт на Free plan має квоту 8 vCPU, а всі free-tier типи (`t3.micro` тощо) мають по 2 vCPU,
+тобто вміщується 4 VM. Тому за замовчуванням (`COLOCATED_WORKER=1`) на VM `parcs-master` працюють
+два сервіси — master (порт 8080) і worker-1 (порт 8081), а `parcs-worker-2..4` — окремі VM.
+Master лише роздає задачі й зводить результати, тож не заважає воркеру. Якщо квота дозволяє
+5+ VM: `COLOCATED_WORKER=0 bash cloud/create_cluster.sh`.
 
 Веб-інтерфейс: `http://<MASTER_IP>:8080/workers`. Задачу можна додати через UI (Add Job:
 `solution/dijkstra_solution.py` + `solution/input_4000.txt`) або з консолі:

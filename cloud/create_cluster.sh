@@ -29,6 +29,7 @@ mkdir -p .build
 make_userdata() {  # $1 = role, $2 = master private ip
   { echo '#!/bin/bash'
     echo "ROLE=$1"; echo "MASTER=$2"; echo "REPO=$REPO_URL"; echo "BRANCH=$REPO_BRANCH"
+    echo "COLOCATED_WORKER=$COLOCATED_WORKER"
     tail -n +2 node_setup.sh
   } > ".build/userdata_$1.sh"
 }
@@ -48,7 +49,9 @@ echo "parcs-master: $MASTER_ID ($MASTER_IP)"
 
 make_userdata worker "$MASTER_IP"
 IDS=("$MASTER_ID")
-for i in $(seq 1 "$WORKERS"); do
+FIRST=1
+[ "$COLOCATED_WORKER" = "1" ] && FIRST=2   # worker-1 працює на VM master'а
+for i in $(seq "$FIRST" "$WORKERS"); do
   ID="$(launch "parcs-worker-$i" worker)"
   echo "parcs-worker-$i: $ID"
   IDS+=("$ID")
