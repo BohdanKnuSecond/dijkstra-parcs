@@ -1,0 +1,5 @@
+vertices=2000
+degree=10
+max_weight=100
+seed=42
+workers=0   # 0 = all available workers
